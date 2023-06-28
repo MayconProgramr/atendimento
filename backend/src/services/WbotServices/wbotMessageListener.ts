@@ -1178,7 +1178,7 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
         });
       });
       sectionsRows.push({
-        title: "Voltar Menu Inicial",
+        title: "Voltar Menu Inicial1",
         rowId: `#`
       });
       const sections = [
@@ -1212,7 +1212,7 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
       });
       buttons.push({
         buttonId: `#`,
-        buttonText: { displayText: "Voltar Menu Inicial" },
+        buttonText: { displayText: "Voltar Menu Inicial2" },
         type: 4
       });
 
@@ -1236,7 +1236,7 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
       queueOptions.forEach((option, i) => {
         options += `*[ ${option.option} ]* - ${option.title}\n`;
       });
-      options += `\n*[ # ]* - Voltar Menu Inicial`;
+      options += `\n*[ # ]* - Voltar Menu Inicial3`;
 
       const textMessage = {
         text: formatBody(`\u200e${queue.greetingMessage}\n\n${options}`, ticket.contact),
@@ -1324,7 +1324,7 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
           });
         });
         sectionsRows.push({
-          title: "Voltar Menu Inicial",
+          title: "Voltar Menu Inicial4",
           rowId: `#`
         });
         const sections = [
@@ -1358,7 +1358,7 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
         });
         buttons.push({
           buttonId: `#`,
-          buttonText: { displayText: "Voltar Menu Inicial" },
+          buttonText: { displayText: "Voltar Menu Inicial5" },
           type: 4
         });
 
@@ -1383,7 +1383,7 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
         queueOptions.forEach((option, i) => {
           options += `*[ ${option.option} ]* - ${option.title}\n`;
         });
-        options += `\n*[ # ]* - Voltar Menu Inicial`;
+        options += `\n*[ # ]* - Voltar Menu Inicial6`;
 
         const textMessage = {
           text: formatBody(`\u200e${currentOption.message}\n\n${options}`, ticket.contact),
