@@ -1069,7 +1069,6 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
 
 
     if (queueOptions.length == 0) {
-      
       const textMessage = {
         text: formatBody(`${currentOption.message}`, ticket.contact),
       };
@@ -1083,9 +1082,9 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
         order: [["createdAt", "DESC"]]
       });
 
-      if (lastMessageFromMe) {
+      /*if (lastMessageFromMe) {
         return;
-      }
+      }*/
 
       const sendMsg = await wbot.sendMessage(
         `${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
