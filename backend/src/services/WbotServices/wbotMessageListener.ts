@@ -914,7 +914,7 @@ const verifyQueue = async (
 
 
     const textMessage = {
-      text: formatBody(`\u200e${greetingMessage}\n\n${options}`, contact),
+      text: formatBody(`saudacao`, contact),
     };
 
     const sendMsg = await wbot.sendMessage(
@@ -969,7 +969,7 @@ const verifyQueue = async (
         }
       }
 
-      const body = formatBody(`${choosenQueue.greetingMessage}`, ticket.contact
+      const body = formatBody(`saudacao2`, ticket.contact
       );
       const sentMessage = await wbot.sendMessage(
         `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`, {
@@ -1239,7 +1239,7 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
       options += `\n*[ # ]* - Voltar Menu Inicial3`;
 
       const textMessage = {
-        text: formatBody(`\u200e${queue.greetingMessage}\n\n${options}`, ticket.contact),
+        text: formatBody(`saudacao3`, ticket.contact),
       };
 
       const sendMsg = await wbot.sendMessage(
