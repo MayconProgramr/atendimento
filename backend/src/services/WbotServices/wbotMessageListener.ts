@@ -1069,14 +1069,10 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
 
 
     if (queueOptions.length == 0) {
-
-      let options = "";
       
-      options = `${currentOption.message}\n*[ # ]* - Voltar Menu Inicial6`;
-
-        const textMessage = {
-          text: formatBody(`teste12324342\n\n${options}`, ticket.contact),
-        };
+      const textMessage = {
+        text: formatBody(`${currentOption.message}`, ticket.contact),
+      };
       //aqui ultima msg do fluxo
       const lastMessageFromMe = await Message.findOne({
         where: {
