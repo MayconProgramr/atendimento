@@ -352,34 +352,6 @@ export const getBodyMessage = async (msg: proto.IWebMessageInfo): Promise<string
           bodyMessage += `\n\n${buton.buttonText.displayText}`;
         }
         return bodyMessage;
-      } else
-        if (msg?.message?.listMessage) {
-          let bodyMessage = `*${msg?.message?.listMessage?.description}*`;
-          for (const buton of msg.message?.listMessage?.sections[0]?.rows) {
-            bodyMessage += `\n\n${buton.title}`;
-          }
-          return bodyMessage;
-
-        }
-      if (msg.message?.viewOnceMessage?.message?.listMessage) {
-
-        let obj = msg.message?.viewOnceMessage?.message.listMessage;
-        let bodyMessage = `*${obj.description}*`;
-        for (const buton of obj.sections[0]?.rows) {
-          bodyMessage += `\n\n${buton.title}`;
-        }
-
-        return bodyMessage;
-      }
-      if (msg.message?.viewOnceMessage?.message?.buttonsMessage) {
-
-        let obj = msg.message?.viewOnceMessage?.message.buttonsMessage;
-        let bodyMessage = `*${obj.contentText}*`;
-        for (const buton of obj?.buttons) {
-          bodyMessage += `\n\n${buton.buttonText.displayText}`;
-        }
-        return bodyMessage;
-
       }
     } catch (error) {
       logger.error(error);
@@ -839,7 +811,6 @@ const verifyQueue = async (
     msg?.message?.conversation;
 
 
-  const choosenQueue = queues[+selectedOption - 1];
 
   const companyId = ticket.companyId;
 
@@ -850,60 +821,6 @@ const verifyQueue = async (
     }
   });
 
-
-  const botList = async () => {
-    const sectionsRows = [];
-
-    queues.forEach((queue, index) => {
-      sectionsRows.push({
-        title: queue.name,
-        rowId: `${index + 1}`
-      });
-    });
-
-    const sections = [
-      {
-        rows: sectionsRows
-      }
-    ];
-
-    const listMessage = {
-      text: formatBody(`\u200e${greetingMessage}`, contact),
-      buttonText: "Escolha uma opção",
-      sections
-    };
-
-    const sendMsg = await wbot.sendMessage(
-      `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
-      listMessage
-    );
-
-    await verifyMessage(sendMsg, ticket, ticket.contact, ticket.companyId);
-  }
-
-  const botButton = async () => {
-    const buttons = [];
-    queues.forEach((queue, index) => {
-      buttons.push({
-        buttonId: `${index + 1}`,
-        buttonText: { displayText: queue.name },
-        type: 4
-      });
-    });
-
-    const buttonMessage = {
-      text: formatBody(`\u200e${greetingMessage}`, contact),
-      buttons,
-      headerType: 4
-    };
-
-    const sendMsg = await wbot.sendMessage(
-      `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
-      buttonMessage
-    );
-
-    await verifyMessage(sendMsg, ticket, ticket.contact, ticket.companyId);
-  }
 
   const botText = async () => {
     let options = "";
@@ -925,78 +842,16 @@ const verifyQueue = async (
     await verifyMessage(sendMsg, ticket, ticket.contact, ticket.companyId);
   };
 
-  if (choosenQueue) {
-    let chatbot = false;
-    if (choosenQueue?.options) {
-      chatbot = choosenQueue.options.length > 0;
-    }
-    await UpdateTicketService({
-      ticketData: { queueId: choosenQueue.id, chatbot },
-      ticketId: ticket.id,
-      companyId: ticket.companyId,
-    });
+    
 
-
-    /* Tratamento para envio de mensagem quando a fila está fora do expediente */
-    if (choosenQueue.options.length === 0) {
-      const queue = await Queue.findByPk(choosenQueue.id);
-      const { schedules }: any = queue;
-      const now = moment();
-      const weekday = now.format("dddd").toLowerCase();
-      let schedule;
-      if (Array.isArray(schedules) && schedules.length > 0) {
-        schedule = schedules.find((s) => s.weekdayEn === weekday && s.startTime !== "" && s.startTime !== null && s.endTime !== "" && s.endTime !== null);
-      }
-
-      if (queue.outOfHoursMessage !== null && queue.outOfHoursMessage !== "" && !isNil(schedule)) {
-        const startTime = moment(schedule.startTime, "HH:mm");
-        const endTime = moment(schedule.endTime, "HH:mm");
-
-        if (now.isBefore(startTime) || now.isAfter(endTime)) {
-          const body = formatBody(`${queue.outOfHoursMessage}\n\n*[ # ]* - Voltar ao Menu Principal`, ticket.contact);
-          const sentMessage = await wbot.sendMessage(
-            `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`, {
-            text: body,
-          }
-          );
-          await verifyMessage(sentMessage, ticket, contact, ticket.companyId);
-          await UpdateTicketService({
-            ticketData: { queueId: null, chatbot },
-            ticketId: ticket.id,
-            companyId: ticket.companyId,
-          });
-          return;
-        }
-      }
-
-      const body = formatBody(`saudacao2`, ticket.contact
-      );
-      const sentMessage = await wbot.sendMessage(
-        `${contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`, {
-        text: body,
-      }
-      );
-      await verifyMessage(sentMessage, ticket, contact, ticket.companyId);
-    }
-
-  } else {
-    if (buttonActive.value === "list") {
-      return botList();
-    };
-
-    if (buttonActive.value === "button" && queues.length <= 4) {
-      return botButton();
-    }
+    
 
     if (buttonActive.value === "text") {
       return botText();
     }
 
-    if (buttonActive.value === "button" && queues.length > 4) {
-      return botText();
-    }
 
-  }
+  
 
 };
 
@@ -1127,6 +982,15 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
       option = await QueueOption.findOne({
         where: { parentId: ticket.queueOptionId },
       });
+      
+      const textMessage = {
+          text: formatBody(`teste12324342\n\n`, ticket.contact),
+        };
+
+        const sendMsg = await wbot.sendMessage(
+          `${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
+          textMessage
+        );
     } else {
       option = await QueueOption.findOne({
         where: {
@@ -1168,67 +1032,6 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
       }
     });
 
-    const botList = async () => {
-      const sectionsRows = [];
-
-      queueOptions.forEach((option, i) => {
-        sectionsRows.push({
-          title: option.title,
-          rowId: `${option.option}`
-        });
-      });
-      sectionsRows.push({
-        title: "Voltar Menu Inicial1",
-        rowId: `#`
-      });
-      const sections = [
-        {
-          rows: sectionsRows
-        }
-      ];
-
-      const listMessage = {
-        text: formatBody(`\u200e${queue.greetingMessage}`, ticket.contact),
-        buttonText: "Escolha uma opção",
-        sections
-      };
-
-      const sendMsg = await wbot.sendMessage(
-        `${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
-        listMessage
-      );
-
-      await verifyMessage(sendMsg, ticket, ticket.contact, ticket.companyId);
-    }
-
-    const botButton = async () => {
-      const buttons = [];
-      queueOptions.forEach((option, i) => {
-        buttons.push({
-          buttonId: `${option.option}`,
-          buttonText: { displayText: option.title },
-          type: 4
-        });
-      });
-      buttons.push({
-        buttonId: `#`,
-        buttonText: { displayText: "Voltar Menu Inicial2" },
-        type: 4
-      });
-
-      const buttonMessage = {
-        text: formatBody(`\u200e${queue.greetingMessage}`, ticket.contact),
-        buttons,
-        headerType: 4
-      };
-
-      const sendMsg = await wbot.sendMessage(
-        `${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
-        buttonMessage
-      );
-
-      await verifyMessage(sendMsg, ticket, ticket.contact, ticket.companyId);
-    }
 
     const botText = async () => {
       let options = "";
@@ -1250,21 +1053,10 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
       await verifyMessage(sendMsg, ticket, ticket.contact, ticket.companyId);
     };
 
-    if (buttonActive.value === "list") {
-      return botList();
-    };
-
-    if (buttonActive.value === "button" && QueueOption.length <= 4) {
-      return botButton();
-    }
-
     if (buttonActive.value === "text") {
       return botText();
     }
 
-    if (buttonActive.value === "button" && QueueOption.length > 4) {
-      return botText();
-    }
   } else if (!isNil(queue) && !isNil(ticket.queueOptionId)) {
     const currentOption = await QueueOption.findByPk(ticket.queueOptionId);
     const queueOptions = await QueueOption.findAll({
@@ -1315,68 +1107,6 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
         }
       });
 
-      const botList = async () => {
-        const sectionsRows = [];
-
-        queueOptions.forEach((option, i) => {
-          sectionsRows.push({
-            title: option.title,
-            rowId: `${option.option}`
-          });
-        });
-        sectionsRows.push({
-          title: "Voltar Menu Inicial4",
-          rowId: `#`
-        });
-        const sections = [
-          {
-            rows: sectionsRows
-          }
-        ];
-
-        const listMessage = {
-          text: formatBody(`\u200e${currentOption.message}`, ticket.contact),
-          buttonText: "Escolha uma opção",
-          sections
-        };
-
-        const sendMsg = await wbot.sendMessage(
-          `${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
-          listMessage
-        );
-
-        await verifyMessage(sendMsg, ticket, ticket.contact, ticket.companyId);
-      }
-
-      const botButton = async () => {
-        const buttons = [];
-        queueOptions.forEach((option, i) => {
-          buttons.push({
-            buttonId: `${option.option}`,
-            buttonText: { displayText: option.title },
-            type: 4
-          });
-        });
-        buttons.push({
-          buttonId: `#`,
-          buttonText: { displayText: "Voltar Menu Inicial5" },
-          type: 4
-        });
-
-        const buttonMessage = {
-          text: formatBody(`\u200e${currentOption.message}`, ticket.contact),
-          buttons,
-          headerType: 4
-        };
-
-        const sendMsg = await wbot.sendMessage(
-          `${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
-          buttonMessage
-        );
-
-        await verifyMessage(sendMsg, ticket, ticket.contact, ticket.companyId);
-      }
-
       const botText = async () => {
 
         let options = "";
@@ -1398,21 +1128,11 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
         await verifyMessage(sendMsg, ticket, ticket.contact, ticket.companyId);
       };
 
-      if (buttonActive.value === "list") {
-        return botList();
-      };
-
-      if (buttonActive.value === "button" && QueueOption.length <= 4) {
-        return botButton();
-      }
-
+      
       if (buttonActive.value === "text") {
         return botText();
       }
 
-      if (buttonActive.value === "button" && QueueOption.length > 4) {
-        return botText();
-      }
     }
   }
 }
