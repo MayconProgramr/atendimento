@@ -219,7 +219,7 @@ const MainListItems = (props) => {
     <div onClick={drawerClose}>
       <Can
         role={user.profile}
-        perform="dashboard:view"
+        perform="dashboard:view" 
         yes={() => (
           <ListItemLink
             to="/"
