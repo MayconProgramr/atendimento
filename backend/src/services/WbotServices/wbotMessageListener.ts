@@ -1304,7 +1304,7 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
       return
     }
 
-    if (queueOptions.length > 1) {
+    if (queueOptions.length > 0) {
 
       const companyId = ticket.companyId;
       const buttonActive = await Setting.findOne({
