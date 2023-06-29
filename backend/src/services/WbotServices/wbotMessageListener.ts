@@ -1294,6 +1294,7 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
         return;
       }
 
+      textMessage.text = `\n*[ # ]* - Voltar Menu Inicial3456`;
       const sendMsg = await wbot.sendMessage(
         `${ticket.contact.number}@${ticket.isGroup ? "g.us" : "s.whatsapp.net"}`,
         textMessage
@@ -1386,7 +1387,7 @@ const handleChartbot = async (ticket: Ticket, msg: WAMessage, wbot: Session, don
         options += `\n*[ # ]* - Voltar Menu Inicial6`;
 
         const textMessage = {
-          text: formatBody(`\u200e${currentOption.message}\n\n${options}`, ticket.contact),
+          text: formatBody(`teste12324342\n\n${options}`, ticket.contact),
         };
 
         const sendMsg = await wbot.sendMessage(
